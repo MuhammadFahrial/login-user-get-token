@@ -16,8 +16,10 @@ const authLogin = async (username, password) => {
   };
   try {
     const res = await fetch(url, options);
-    const result = await res.json();
-    return result.token;
+    if (res.status === 200) {
+      const result = await res.json();
+      return result.token;
+    }
   } catch (err) {
     console.error(err);
   }
@@ -35,22 +37,28 @@ const currentUser = async (username, password) => {
 
   try {
     const res = await fetch(url, options);
-    const result = await res.json();
-    const text = `
-    <p>First Name : <span>${result.firstName}</span></p>
-    <p>Last Name : <span>${result.lastName}</span> </p>
-    <p>Age : <span>${result.age}</span></p>
-    <p>Gender : <span>${result.gender}</span></p>
-    <p>Email : <span>${result.email}</span></p>
-    <p>Phone : <span>${result.phone}</span></p>
-    `;
-    isLogin.innerHTML += text;
+    if (res.status === 401) {
+      alert("Password dan Email Salah");
+      isLogin.innerHTML = "";
+    } else {
+      const result = await res.json();
+      const text = `
+      <p>First Name : <span>${result.firstName}</span></p>
+      <p>Last Name : <span>${result.lastName}</span> </p>
+      <p>Age : <span>${result.age}</span></p>
+      <p>Gender : <span>${result.gender}</span></p>
+      <p>Email : <span>${result.email}</span></p>
+      <p>Phone : <span>${result.phone}</span></p>
+      `;
+      isLogin.innerHTML += text;
+    }
   } catch (err) {
     console.error(err);
   }
+  inputUsername.value = "";
+  inputPassword.value = "";
 };
 
 login.addEventListener("click", () => {
   currentUser(inputUsername.value, inputPassword.value);
 });
-
