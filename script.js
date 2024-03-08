@@ -25,6 +25,8 @@ const authLogin = async (username, password) => {
   }
 };
 
+authLogin().then((r) => console.log(r));
+
 const currentUser = async (username, password) => {
   const token = await authLogin(username, password);
   const url = "https://dummyjson.com/auth/me";
@@ -34,6 +36,8 @@ const currentUser = async (username, password) => {
       Authorization: token,
     },
   };
+
+  // currentUser().then((r) => console.log(r));
 
   try {
     const res = await fetch(url, options);
